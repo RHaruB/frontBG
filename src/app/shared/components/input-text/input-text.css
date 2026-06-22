@@ -1,0 +1,90 @@
+/* Estilos base para el input y el componente password de PrimeNG */
+:host ::ng-deep .p-inputtext,
+:host ::ng-deep .p-password input {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 0.75rem 1.25rem;
+    /* Padding horizontal base aumentado */
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+    width: 100%;
+    background: white;
+}
+
+:host ::ng-deep .p-inputtext:hover,
+:host ::ng-deep .p-password:not(.p-disabled):hover input {
+    border-color: #d1d5db;
+}
+
+:host ::ng-deep .p-inputtext:focus,
+:host ::ng-deep .p-password-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+:host ::ng-deep .p-invalid .p-inputtext,
+:host ::ng-deep .p-invalid input {
+    border-color: #ef4444 !important;
+}
+
+:host ::ng-deep .p-iconfield {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+:host ::ng-deep .p-inputicon {
+    position: absolute !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    font-size: 1.1rem;
+    color: #94a3b8;
+    z-index: 10;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: auto !important;
+    margin-top: 0 !important;
+}
+
+/* Ajustes de posición para iconos laterales - Espaciado Premium */
+:host ::ng-deep .p-iconfield-left>.p-inputicon {
+    left: 1.25rem;
+}
+
+:host ::ng-deep .p-iconfield-right>.p-inputicon {
+    right: 1.25rem;
+}
+
+
+
+:host ::ng-deep .p-iconfield-right>.p-inputtext,
+:host ::ng-deep .p-iconfield-right>.p-password input {
+    padding-right: 3.5rem !important;
+}
+
+:host ::ng-deep .p-password {
+    display: flex !important;
+    width: 100%;
+    position: relative !important;
+}
+
+:host ::ng-deep .p-password input {
+    /* El espacio para el ojo de visibilidad se suma al del icono si estuviera a la derecha */
+    padding-right: 3.5rem !important;
+}
+
+/* Iconos de mostrar/ocultar contraseña (ojo) */
+:host ::ng-deep .p-password-toggle-mask-icon,
+:host ::ng-deep .p-password-show-icon,
+:host ::ng-deep .p-password-hide-icon {
+    position: absolute !important;
+    right: 1.25rem !important;
+    left: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #64748b !important;
+    cursor: pointer !important;
+    z-index: 20 !important;
+}

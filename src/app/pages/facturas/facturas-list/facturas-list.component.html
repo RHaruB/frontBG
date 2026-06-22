@@ -1,0 +1,274 @@
+<div class="page-wrapper">
+  <!-- Title and Actions -->
+  <div class="bg-card-header flex justify-between items-center w-full">
+    <div>
+      <h1>Listado de Facturas</h1>
+      <p>Consulte y filtre las facturas emitidas por la institución.</p>
+    </div>
+    <a routerLink="/facturas/nueva" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+      </svg>
+      Nueva Factura
+    </a>
+  </div>
+
+  <div *ngIf="errorMessage && !showDetailModal" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Advanced Filters Grid -->
+  <div class="bg-card filters-panel">
+    <form (ngSubmit)="onBuscar()" class="advanced-filters-form">
+      <div class="filters-grid">
+        <div class="form-group">
+          <label class="form-label">Número de Factura</label>
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Ej: FAC-001"
+            [(ngModel)]="filtroNumero"
+            name="filtroNumero"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Cliente</label>
+          <select class="form-control" [(ngModel)]="filtroCliente" name="filtroCliente">
+            <option value="">-- Todos los Clientes --</option>
+            <option *ngFor="let cliente of clientes" [value]="cliente.clienteID">
+              {{ cliente.nombre }} ({{ cliente.identificacion }})
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Vendedor</label>
+          <select class="form-control" [(ngModel)]="filtroVendedor" name="filtroVendedor">
+            <option value="">-- Todos los Vendedores --</option>
+            <option *ngFor="let v of vendedores" [value]="v.usuarioID">
+              {{ v.nombre }}
+            </option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Desde (Fecha)</label>
+          <input type="date" class="form-control" [(ngModel)]="filtroFechaDesde" name="filtroFechaDesde" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Hasta (Fecha)</label>
+          <input type="date" class="form-control" [(ngModel)]="filtroFechaHasta" name="filtroFechaHasta" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Monto Mínimo ($)</label>
+          <input type="number" step="0.01" class="form-control" placeholder="0.00" [(ngModel)]="filtroMontoDesde" name="filtroMontoDesde" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Monto Máximo ($)</label>
+          <input type="number" step="0.01" class="form-control" placeholder="1000.00" [(ngModel)]="filtroMontoHasta" name="filtroMontoHasta" />
+        </div>
+      </div>
+
+      <div class="filters-actions-right">
+        <button type="button" class="btn btn-outline" (click)="onResetFiltros()">Limpiar Filtros</button>
+        <button type="submit" class="btn btn-secondary">Buscar Facturas</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="text-center" style="padding: 3rem 0;">
+    <div class="spinner-large" style="margin: 0 auto 1rem;"></div>
+    <p>Cargando facturas...</p>
+  </div>
+
+  <!-- Invoices Table -->
+  <div class="bg-card" *ngIf="!isLoading">
+    <div class="table-responsive" *ngIf="facturas.length > 0; else noFacturas">
+      <table class="bg-table">
+        <thead>
+          <tr>
+            <th>No. Factura</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Vendedor</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-right">IVA (12%)</th>
+            <th class="text-right">Total</th>
+            <th>Estado</th>
+            <th class="text-center">Detalle</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let f of facturas">
+            <td><strong>{{ f.numeroFactura }}</strong></td>
+            <td>{{ f.clienteNombre }}</td>
+            <td>{{ f.fechaFactura | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ f.vendedorNombre }}</td>
+            <td class="text-right">${{ f.subtotal | number:'1.2-2' }}</td>
+            <td class="text-right">${{ f.iva | number:'1.2-2' }}</td>
+            <td class="text-right"><strong>${{ f.total | number:'1.2-2' }}</strong></td>
+            <td>
+              <span class="badge" [ngClass]="f.activo ? 'badge-success' : 'badge-danger'">
+                {{ f.activo ? 'Activa' : 'Anulada' }}
+              </span>
+            </td>
+            <td class="text-center">
+              <button class="btn btn-outline-primary btn-sm-action" (click)="openDetailModal(f)">
+                Ver Detalle
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noFacturas>
+      <div class="no-data-placeholder text-center">
+        <p>No se encontraron facturas con los criterios de búsqueda especificados.</p>
+      </div>
+    </ng-template>
+
+    <!-- Pagination -->
+    <div class="pagination-wrapper" *ngIf="totalPaginas > 1">
+      <div class="pagination-info">
+        Mostrando página {{ paginaActual }} de {{ totalPaginas }} ({{ totalRegistros }} registros en total)
+      </div>
+      <div class="pagination-buttons">
+        <button 
+          class="pagination-btn" 
+          [disabled]="paginaActual === 1" 
+          (click)="cambiarPagina(paginaActual - 1)"
+          title="Página Anterior"
+        >&laquo;</button>
+        
+        <button 
+          *ngFor="let p of [].constructor(totalPaginas); let i = index" 
+          class="pagination-btn"
+          [class.active]="paginaActual === (i + 1)"
+          (click)="cambiarPagina(i + 1)"
+        >
+          {{ i + 1 }}
+        </button>
+
+        <button 
+          class="pagination-btn" 
+          [disabled]="paginaActual === totalPaginas" 
+          (click)="cambiarPagina(paginaActual + 1)"
+          title="Página Siguiente"
+        >&raquo;</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detail Modal Overlay -->
+  <div class="modal-overlay" *ngIf="showDetailModal && selectedFactura">
+    <div class="modal-container detail-modal">
+      <div class="modal-header">
+        <div class="receipt-header-title">
+          <h2>Detalle de Factura</h2>
+          <span class="invoice-badge">{{ selectedFactura.numeroFactura }}</span>
+        </div>
+        <button class="btn-toggle-sidebar" (click)="closeDetailModal()" style="padding: 0;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="24" height="24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-body receipt-body">
+        <!-- Billing Details Info Grid -->
+        <div class="receipt-info-grid">
+          <div>
+            <h4 class="info-title">Información del Cliente</h4>
+            <p><strong>Nombre:</strong> {{ selectedFactura.clienteNombre }}</p>
+            <p><strong>Identificación:</strong> {{ selectedFactura.clienteIdentificacion }}</p>
+            <p><strong>Teléfono:</strong> {{ selectedFactura.clienteTelefono || 'N/A' }}</p>
+            <p><strong>Email:</strong> {{ selectedFactura.clienteEmail || 'N/A' }}</p>
+          </div>
+          <div>
+            <h4 class="info-title">Datos del Comprobante</h4>
+            <p><strong>Fecha Emisión:</strong> {{ selectedFactura.fechaFactura | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+            <p><strong>Vendedor:</strong> {{ selectedFactura.vendedorNombre }}</p>
+            <p><strong>Estado:</strong> 
+              <span class="badge" [ngClass]="selectedFactura.activo ? 'badge-success' : 'badge-danger'">
+                {{ selectedFactura.activo ? 'Activa' : 'Anulada' }}
+              </span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <h4 class="section-title">Detalle de Productos</h4>
+        <div class="table-responsive">
+          <table class="bg-table receipt-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th class="text-center">Cant.</th>
+                <th class="text-right">Precio Unit.</th>
+                <th class="text-right">Subtotal</th>
+                <th class="text-right">IVA (12%)</th>
+                <th class="text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of selectedFactura.detalles">
+                <td>{{ item.productoNombre }}</td>
+                <td class="text-center">{{ item.cantidad }}</td>
+                <td class="text-right">${{ item.precioUnitario | number:'1.2-2' }}</td>
+                <td class="text-right">${{ item.subtotal | number:'1.2-2' }}</td>
+                <td class="text-right">${{ item.iva | number:'1.2-2' }}</td>
+                <td class="text-right"><strong>${{ item.total | number:'1.2-2' }}</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Invoice Calculation Breakdown -->
+        <div class="receipt-totals-section">
+          <div class="totals-col">
+            <!-- Payment Methods Info -->
+            <h4 class="section-title" style="margin-top: 0;">Medios de Pago</h4>
+            <div class="payment-methods-list">
+              <div class="payment-item" *ngFor="let p of selectedFactura.pagos">
+                <span class="pm-name">{{ p.formaPagoNombre }}</span>
+                <span class="pm-ref" *ngIf="p.referencia">(Ref: {{ p.referencia }})</span>
+                <span class="pm-amount"><strong>${{ p.monto | number:'1.2-2' }}</strong></span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="totals-col text-right">
+            <div class="total-row">
+              <span class="total-label">Subtotal:</span>
+              <span class="total-val">${{ selectedFactura.subtotal | number:'1.2-2' }}</span>
+            </div>
+            <div class="total-row">
+              <span class="total-label">IVA (12%):</span>
+              <span class="total-val">${{ selectedFactura.iva | number:'1.2-2' }}</span>
+            </div>
+            <div class="total-row main-total">
+              <span class="total-label">TOTAL:</span>
+              <span class="total-val">${{ selectedFactura.total | number:'1.2-2' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-outline" (click)="closeDetailModal()">Cerrar</button>
+        <button class="btn btn-primary" onclick="window.print()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="20" height="20">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+          </svg>
+          Imprimir
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

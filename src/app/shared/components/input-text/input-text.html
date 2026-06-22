@@ -1,0 +1,31 @@
+<div class="flex flex-col gap-2 w-full">
+    @if (label) {
+    <label class="font-medium text-sm text-gray-700">
+        {{ label }}
+        @if (required) {
+        <span class="text-red-500">*</span>
+        }
+    </label>
+    }
+
+    <p-iconfield [iconPosition]="iconPos">
+        @if (icon) {
+        <p-inputicon [class]="'pi pi-' + icon"></p-inputicon>
+        }
+
+        @if (type === 'password') {
+        <p-password [placeholder]="placeholder" [disabled]="disabled" [(ngModel)]="value"
+            (ngModelChange)="onInputChangeDesdeModel($event)" (onBlur)="onTouched()" [feedback]="feedback"
+            [toggleMask]="toggleMask" [fluid]="true" [styleClass]="(errorMessage || invalid) ? 'p-invalid' : ''"
+            [inputStyleClass]="'w-full'" />
+        } @else {
+        <input pInputText [type]="type" [placeholder]="placeholder" [disabled]="disabled" [value]="value"
+            (input)="onInputChange($event)" (blur)="onTouched()" class="w-full"
+            [class.p-invalid]="errorMessage || invalid" />
+        }
+    </p-iconfield>
+
+    @if (errorMessage) {
+    <small class="text-red-500">{{ errorMessage }}</small>
+    }
+</div>

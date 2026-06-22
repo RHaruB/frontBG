@@ -1,0 +1,29 @@
+<div class="login-container">
+    <div class="login-card shadow-2xl">
+        <div class="login-header">
+            <h1 class="login-title">Bienvenido</h1>
+            <p class="login-subtitle">Ingrese sus credenciales para acceder al sistema</p>
+        </div>
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+            <app-input-text label="Usuario" placeholder="user" [required]="true"
+                 formControlName="usuario" />
+
+            <app-input-text label="Contraseña" type="password" placeholder="••••••••" [required]="true"
+                [feedback]="false" [toggleMask]="true" [errorMessage]="passwordError"
+                formControlName="password" />
+
+            @if (error) {
+            <div class="error-message p-3 rounded bg-red-50 text-red-600 text-sm border border-red-200">
+                <i class="pi pi-exclamation-circle mr-2"></i>
+                {{ error }}
+            </div>
+            }
+
+            <div class="mt-4">
+                <app-button label="Ingresar al Sistema" type="submit" variant="primary" icon="arrow-right"
+                    iconPos="right" [fullWidth]="true" size="large" />
+            </div>
+        </form>
+    </div>
+</div>

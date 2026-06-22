@@ -1,0 +1,153 @@
+<div class="dashboard-wrapper">
+  <!-- Welcome Banner -->
+  <div class="welcome-banner">
+    <div class="welcome-text">
+      <h1>¡Hola, {{ vendedorName() }}!</h1>
+      <p>Bienvenido al Portal de Facturación. Aquí está el resumen de la actividad comercial.</p>
+    </div>
+    <div class="welcome-badge">
+      <span class="badge badge-primary">Banco Guayaquil Corporativo</span>
+    </div>
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="stats-loading">
+    <div class="spinner-large"></div>
+    <p>Cargando información del servidor...</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <!-- Stats Cards Grid -->
+    <div class="stats-grid">
+      <div class="bg-card hoverable stat-card">
+        <div class="stat-icon sales">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <h3>${{ sumaVentas | number:'1.2-2' }}</h3>
+          <p>Ventas Recientes</p>
+        </div>
+      </div>
+
+      <div class="bg-card hoverable stat-card">
+        <div class="stat-icon invoices">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <h3>{{ totalFacturas }}</h3>
+          <p>Facturas Emitidas</p>
+        </div>
+      </div>
+
+      <div class="bg-card hoverable stat-card">
+        <div class="stat-icon clients">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <h3>{{ totalClientes }}</h3>
+          <p>Clientes Activos</p>
+        </div>
+      </div>
+
+      <div class="bg-card hoverable stat-card">
+        <div class="stat-icon products">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          </svg>
+        </div>
+        <div class="stat-details">
+          <h3>{{ totalProductos }}</h3>
+          <p>Productos en Catálogo</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions Panel -->
+    <div class="bg-card quick-actions-panel">
+      <div class="bg-card-header">
+        <h3>Accesos Rápidos</h3>
+      </div>
+      <div class="actions-grid">
+        <a routerLink="/facturas/nueva" class="action-btn-card">
+          <div class="action-icon primary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+          </div>
+          <span>Nueva Factura</span>
+        </a>
+        
+        <a routerLink="/clientes" class="action-btn-card">
+          <div class="action-icon secondary">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <span>Administrar Clientes</span>
+        </a>
+
+        <a routerLink="/productos" class="action-btn-card">
+          <div class="action-icon success">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            </svg>
+          </div>
+          <span>Inventario de Productos</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Recent Invoices Table -->
+    <div class="bg-card">
+      <div class="bg-card-header">
+        <h3>Últimas Facturas Emitidas</h3>
+        <a routerLink="/facturas" class="btn btn-outline-primary btn-sm">Ver todas</a>
+      </div>
+
+      <div class="table-responsive" *ngIf="recentInvoices.length > 0; else noInvoices">
+        <table class="bg-table">
+          <thead>
+            <tr>
+              <th>No. Factura</th>
+              <th>Cliente</th>
+              <th>Fecha</th>
+              <th>Vendedor</th>
+              <th class="text-right">Total</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let invoice of recentInvoices">
+              <td><strong>{{ invoice.numeroFactura }}</strong></td>
+              <td>{{ invoice.clienteNombre }}</td>
+              <td>{{ invoice.fechaFactura | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td>{{ invoice.vendedorNombre }}</td>
+              <td class="text-right"><strong>${{ invoice.total | number:'1.2-2' }}</strong></td>
+              <td>
+                <span class="badge" [ngClass]="invoice.activo ? 'badge-success' : 'badge-danger'">
+                  {{ invoice.activo ? 'Activo' : 'Anulado' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <ng-template #noInvoices>
+        <div class="no-data-placeholder text-center">
+          <p>No hay facturas registradas recientemente.</p>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

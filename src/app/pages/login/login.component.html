@@ -1,0 +1,75 @@
+<div class="login-wrapper">
+  <div class="login-background-art">
+    <div class="glow-orb orb-1"></div>
+    <div class="glow-orb orb-2"></div>
+  </div>
+
+  <div class="login-container">
+    <div class="login-header-logo">
+      <div class="bg-logo">
+        <span class="logo-text-bold">Banco</span>
+        <span class="logo-text-light">Guayaquil</span>
+        <div class="logo-dot"></div>
+      </div>
+      <p class="login-subtitle">Sistema de Facturación Electrónica</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username" class="form-label">Nombre de Usuario</label>
+        <div class="input-with-icon">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-control"
+            placeholder="Ingrese su usuario"
+            [(ngModel)]="username"
+            required
+            [disabled]="isLoading"
+          />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="contrasena" class="form-label">Contraseña</label>
+        <div class="input-with-icon">
+          <svg class="input-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+          <input
+            type="password"
+            id="contrasena"
+            name="contrasena"
+            class="form-control"
+            placeholder="••••••••"
+            [(ngModel)]="contrasena"
+            required
+            [disabled]="isLoading"
+          />
+        </div>
+      </div>
+
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        <div class="alert-content">
+          <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+          </svg>
+          <span>{{ errorMessage }}</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-block btn-login" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Ingresar</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </form>
+    
+    <div class="login-footer">
+      <p>&copy; 2026 Banco Guayaquil. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</div>

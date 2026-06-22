@@ -1,0 +1,19 @@
+<div class="flex flex-col gap-2 w-full">
+    @if (label) {
+    <label class="font-medium text-sm text-gray-700">
+        {{ label }}
+        @if (required) {
+        <span class="text-red-500">*</span>
+        }
+    </label>
+    }
+
+    <p-select [options]="options" [optionLabel]="optionLabel" [optionValue]="optionValue" [placeholder]="placeholder"
+        [disabled]="disabled" [filter]="filter" [showClear]="showClear" [(ngModel)]="value"
+        (onChange)="onSelectChange($event)" (onBlur)="onTouched()"
+        [styleClass]="errorMessage ? 'w-full p-invalid' : 'w-full'" />
+
+    @if (errorMessage) {
+    <small class="text-red-500">{{ errorMessage }}</small>
+    }
+</div>

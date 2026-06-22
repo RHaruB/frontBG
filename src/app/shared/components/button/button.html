@@ -1,0 +1,19 @@
+<button [type]="type" [disabled]="disabled || loading" [class]="buttonClasses" (click)="handleClick($event)">
+    @if (loading) {
+    <span class="app-button__spinner"></span>
+    }
+
+    @if (icon && iconPos === 'left' && !loading) {
+    <i [class]="'pi pi-' + icon + ' app-button__icon app-button__icon--left'"></i>
+    }
+
+    @if (label) {
+    <span class="app-button__label">{{ label }}</span>
+    } @else {
+    <ng-content></ng-content>
+    }
+
+    @if (icon && iconPos === 'right' && !loading) {
+    <i [class]="'pi pi-' + icon + ' app-button__icon app-button__icon--right'"></i>
+    }
+</button>

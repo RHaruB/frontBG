@@ -1,0 +1,304 @@
+<div class="page-wrapper">
+  <!-- Title -->
+  <div class="bg-card-header flex justify-between items-center w-full">
+    <div>
+      <h1>Nueva Factura</h1>
+      <p>Proceso guiado para la emisión de facturas electrónicas comerciales.</p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Stepper Progress Bar -->
+  <div class="stepper">
+    <div class="step" [class.active]="activeStep === 1" [class.completed]="activeStep > 1">
+      <div class="step-circle">1</div>
+      <span class="step-label">Datos del Cliente</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" [class.active]="activeStep === 2" [class.completed]="activeStep > 2">
+      <div class="step-circle">2</div>
+      <span class="step-label">Detalle de Productos</span>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step" [class.active]="activeStep === 3" [class.completed]="activeStep > 3">
+      <div class="step-circle">3</div>
+      <span class="step-label">Medios de Pago</span>
+    </div>
+  </div>
+
+  <!-- Step 1: Cliente & Fecha -->
+  <div class="bg-card step-content" *ngIf="activeStep === 1">
+    <h3 class="step-title">Paso 1: Seleccionar Cliente y Fecha</h3>
+    
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label for="fechaFactura" class="form-label">Fecha de Emisión *</label>
+        <input
+          type="date"
+          id="fechaFactura"
+          class="form-control"
+          [(ngModel)]="fechaFactura"
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="clienteSelect" class="form-label">Cliente Receptor *</label>
+        <select
+          id="clienteSelect"
+          class="form-control"
+          [(ngModel)]="selectedClienteId"
+        >
+          <option value="">-- Seleccione un Cliente --</option>
+          <option *ngFor="let c of clientes" [value]="c.clienteID">
+            {{ c.nombre }} ({{ c.identificacion }})
+          </option>
+        </select>
+        <p class="form-help" style="font-size: 0.8rem; margin-top: 0.25rem;">
+          Si el cliente no se encuentra registrado, puede crearlo en la sección de <a routerLink="/clientes" style="color: var(--primary); font-weight: 600;">Clientes</a>.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-actions mt-4">
+      <div></div>
+      <button class="btn btn-primary" (click)="changeStep(2)">Siguiente &raquo;</button>
+    </div>
+  </div>
+
+  <!-- Step 2: Productos -->
+  <div class="bg-card step-content" *ngIf="activeStep === 2">
+    <h3 class="step-title">Paso 2: Agregar Items a la Factura</h3>
+    
+    <!-- Item Picker Form -->
+    <div class="picker-panel">
+      <div class="form-group" style="flex: 2; min-width: 200px;">
+        <label for="prodSelect" class="form-label">Producto *</label>
+        <select
+          id="prodSelect"
+          class="form-control"
+          [(ngModel)]="selectedProductoId"
+          (change)="onProductoChange()"
+        >
+          <option value="">-- Seleccione un Producto --</option>
+          <option *ngFor="let p of productos" [value]="p.productoID" [disabled]="p.stockActual <= 0">
+            {{ p.nombre }} - En Stock: {{ p.stockActual }} (P.U: ${{ p.precioUnitario | number:'1.2-2' }})
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group" style="flex: 0.5; min-width: 100px;">
+        <label for="cantidad" class="form-label">Cantidad *</label>
+        <input
+          type="number"
+          id="cantidad"
+          class="form-control"
+          [(ngModel)]="cantidadItem"
+          min="1"
+        />
+      </div>
+
+      <div class="form-group" style="flex: 0.8; min-width: 120px;">
+        <label for="precio" class="form-label">Precio Unit. ($) *</label>
+        <input
+          type="number"
+          step="0.01"
+          id="precio"
+          class="form-control"
+          [(ngModel)]="precioManual"
+        />
+      </div>
+
+      <div class="form-group" style="align-self: flex-end;">
+        <button type="button" class="btn btn-secondary" (click)="agregarItem()">
+          Agregar Item
+        </button>
+      </div>
+    </div>
+
+    <!-- Items Grid List -->
+    <h4 class="section-title">Detalle de Factura</h4>
+    <div class="table-responsive">
+      <table class="bg-table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th class="text-center">Cant.</th>
+            <th class="text-right">P. Unit.</th>
+            <th class="text-right">Subtotal</th>
+            <th class="text-right">IVA (0%)</th>
+            <th class="text-right">Total</th>
+            <th class="text-center">Quitar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of detalles; let i = index">
+            <td>{{ item.producto.nombre }}</td>
+            <td class="text-center">{{ item.cantidad }}</td>
+            <td class="text-right">${{ item.precioUnitario | number:'1.2-2' }}</td>
+            <td class="text-right">${{ item.subtotal | number:'1.2-2' }}</td>
+            <td class="text-right">${{ item.iva | number:'1.2-2' }}</td>
+            <td class="text-right"><strong>${{ item.total | number:'1.2-2' }}</strong></td>
+            <td class="text-center">
+              <button class="btn-action delete" (click)="removerItem(i)" title="Quitar item">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="detalles.length === 0">
+            <td colspan="7" class="text-center text-muted" style="padding: 2rem;">
+              No se han agregado productos a la factura todavía.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Temporary calculations banner -->
+    <div class="inline-totals-banner text-right mt-3" *ngIf="detalles.length > 0">
+      <p>Subtotal: <strong>${{ subtotalFactura | number:'1.2-2' }}</strong></p>
+      <p style="font-size: 1.25rem; color: var(--primary);">Total Factura: <strong>${{ totalFactura | number:'1.2-2' }}</strong></p>
+    </div>
+
+    <div class="step-actions mt-4">
+      <button class="btn btn-outline" (click)="changeStep(1)">&laquo; Anterior</button>
+      <button class="btn btn-primary" (click)="changeStep(3)" [disabled]="detalles.length === 0">Siguiente &raquo;</button>
+    </div>
+  </div>
+
+  <!-- Step 3: Pagos y Confirmar -->
+  <div class="bg-card step-content" *ngIf="activeStep === 3">
+    <h3 class="step-title">Paso 3: Registrar Pagos y Emitir Factura</h3>
+
+    <div class="step3-grid">
+      <!-- Payments form and list -->
+      <div class="payments-container">
+        <h4 class="section-title">Ingresar Medios de Pago</h4>
+        
+        <div class="payment-picker-form">
+          <div class="form-group">
+            <label class="form-label">Forma de Pago *</label>
+            <select class="form-control" [(ngModel)]="selectedFormaPagoId">
+              <option value="">-- Seleccione un medio --</option>
+              <option *ngFor="let f of formasPago" [value]="f.formaPagoID">
+                {{ f.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Monto ($) *</label>
+            <input type="number" step="0.01" class="form-control" [(ngModel)]="montoPago" />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Referencia / Observaciones</label>
+            <input type="text" class="form-control" placeholder="Ej: Transf #12345" [(ngModel)]="referenciaPago" />
+          </div>
+
+          <div class="form-group btn-add-payment-group">
+            <button type="button" class="btn btn-secondary w-full" (click)="agregarPago()">
+              Agregar Pago
+            </button>
+          </div>
+        </div>
+
+        <h4 class="section-title" style="margin-top: 1.5rem;">Pagos Registrados</h4>
+        <div class="table-responsive">
+          <table class="bg-table">
+            <thead>
+              <tr>
+                <th>Forma de Pago</th>
+                <th>Referencia</th>
+                <th class="text-right">Monto</th>
+                <th class="text-center">Quitar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pagos; let idx = index">
+                <td><strong>{{ p.formaPago.nombre }}</strong></td>
+                <td>{{ p.referencia || 'Sin Referencia' }}</td>
+                <td class="text-right">${{ p.monto | number:'1.2-2' }}</td>
+                <td class="text-center">
+                  <button class="btn-action delete" (click)="removerPago(idx)" title="Quitar pago">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="16" height="16">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              <tr *ngIf="pagos.length === 0">
+                <td colspan="4" class="text-center text-muted" style="padding: 1.5rem;">
+                  No ha registrado ningún pago. Debe cubrir la totalidad de la factura.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Live totals and confirmation -->
+      <div class="billing-summary-panel">
+        <h4 class="section-title">Resumen de Totales</h4>
+        
+        <div class="summary-totals-box">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span>${{ subtotalFactura | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row">
+            <span>IVA (0%):</span>
+            <span>$0.00</span>
+          </div>
+          <div class="summary-row total">
+            <span>TOTAL FACTURA:</span>
+            <span>${{ totalFactura | number:'1.2-2' }}</span>
+          </div>
+          <div class="summary-row paid">
+            <span>Monto Pagado:</span>
+            <span>${{ totalPagado | number:'1.2-2' }}</span>
+          </div>
+          
+          <div class="summary-row remaining" [class.zero]="saldoRestante === 0">
+            <span>Saldo Restante:</span>
+            <span>${{ saldoRestante | number:'1.2-2' }}</span>
+          </div>
+        </div>
+
+        <div class="summary-warning-alert" *ngIf="saldoRestante > 0">
+          <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>El saldo restante debe ser $0.00 para poder emitir la factura.</span>
+        </div>
+
+        <div class="summary-success-alert" *ngIf="saldoRestante === 0 && detalles.length > 0">
+          <svg class="alert-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>Factura lista para ser emitida electrónicamente.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-actions mt-4">
+      <button class="btn btn-outline" (click)="changeStep(2)" [disabled]="isLoading">&laquo; Anterior</button>
+      <button 
+        class="btn btn-primary" 
+        (click)="guardarFactura()" 
+        [disabled]="saldoRestante > 0 || detalles.length === 0 || isLoading"
+      >
+        <span *ngIf="!isLoading">Emitir Factura</span>
+        <span *ngIf="isLoading" class="spinner"></span>
+      </button>
+    </div>
+  </div>
+</div>

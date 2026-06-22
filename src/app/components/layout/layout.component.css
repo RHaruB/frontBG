@@ -1,0 +1,235 @@
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100vw;
+  background-color: var(--background);
+}
+
+/* Sidebar Styles */
+.sidebar {
+  width: 260px;
+  background-color: var(--secondary);
+  color: var(--surface);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-normal);
+  flex-shrink: 0;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+  z-index: 10;
+}
+
+.sidebar-header {
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sidebar .bg-logo {
+  font-size: 1.4rem;
+  color: var(--surface);
+}
+
+.sidebar .logo-dot {
+  background-color: var(--primary);
+  margin-bottom: 5px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 1.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  color: #D1D5DB;
+  text-decoration: none;
+  border-radius: var(--border-radius-sm);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--surface);
+}
+
+.nav-item.active {
+  background-color: rgba(227, 0, 126, 0.1);
+  color: var(--primary);
+  border-left-color: var(--primary);
+  font-weight: 600;
+}
+
+.nav-item.highlight {
+  background-color: var(--primary);
+  color: var(--surface);
+  margin-top: 0.5rem;
+  box-shadow: 0 4px 12px rgba(227, 0, 126, 0.3);
+}
+
+.nav-item.highlight:hover {
+  background-color: var(--primary-hover);
+}
+
+.nav-item.highlight.active {
+  background-color: var(--primary-hover);
+  border-left-color: var(--surface);
+}
+
+.nav-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.sidebar-divider {
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.06);
+  margin: 1rem 0;
+}
+
+/* Header Styles */
+.header {
+  height: 70px;
+  background-color: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.btn-toggle-sidebar {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-toggle-sidebar:hover {
+  background-color: var(--background);
+  color: var(--primary);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-left: 1px solid var(--border);
+  padding-left: 1.5rem;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  max-width: 150px;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-logout {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.btn-logout:hover {
+  background-color: var(--error-soft);
+  color: var(--error);
+}
+
+/* Page Wrapper */
+.page-wrapper-container {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+/* Collapsed Sidebar State overrides */
+.sidebar-collapsed .sidebar {
+  width: 70px;
+}
+
+.sidebar-collapsed .sidebar-header {
+  justify-content: center;
+  padding: 0;
+}
+
+.sidebar-collapsed .nav-item {
+  justify-content: center;
+  padding: 0.75rem 0;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-collapsed .nav-item.active {
+  border-left-color: var(--primary);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: absolute;
+    height: 100vh;
+    left: -260px;
+  }
+  .app-container.sidebar-collapsed .sidebar {
+    left: 0;
+    width: 260px;
+  }
+}

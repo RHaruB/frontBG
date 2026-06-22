@@ -1,0 +1,81 @@
+<div class="layout-wrapper" [class.layout-collapsed]="isSidebarCollapsed()">
+    <!-- Sidebar -->
+    <aside class="layout-sidebar">
+        <div class="sidebar-header">
+            <div class="logo-container">
+                <i class="pi pi-bolt logo-icon"></i>
+                <span class="logo-text">FacturaBG</span>
+            </div>
+            <button class="toggle-btn" (click)="toggleSidebar()">
+                <i [class]="isSidebarCollapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"></i>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            @for (item of menuItems; track item.label) {
+            <div class="menu-group">
+                @if (!item.children) {
+                <a [routerLink]="item.route" routerLinkActive="active-link" class="nav-item">
+                    <i [class]="item.icon"></i>
+                    <span class="nav-label">{{ item.label }}</span>
+                </a>
+                } @else {
+                <div class="nav-item has-children" (click)="toggleSubmenu(item)" [class.expanded]="item.expanded">
+                    <i [class]="item.icon"></i>
+                    <span class="nav-label">{{ item.label }}</span>
+                    <i class="pi pi-chevron-down arrow-icon"></i>
+                </div>
+                @if (item.expanded) {
+                <div class="submenu">
+                    @for (child of item.children; track child.label) {
+                    <a [routerLink]="child.route" routerLinkActive="active-link" class="submenu-item">
+                        <i [class]="child.icon"></i>
+                        <span class="nav-label">{{ child.label }}</span>
+                    </a>
+                    }
+                </div>
+                }
+                }
+            </div>
+            }
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="logout-btn" (click)="logout()">
+                <i class="pi pi-power-off"></i>
+                <span class="nav-label">Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="layout-main">
+        <header class="layout-topbar">
+            <div class="topbar-left">
+                <button class="mobile-menu-btn" (click)="toggleSidebar()">
+                    <i class="pi pi-bars"></i>
+                </button>
+                <h2 class="page-title">Sistema de Facturación</h2>
+            </div>
+
+            <div class="topbar-right">
+                <div class="user-profile">
+                    <div class="user-info text-right mr-3">
+                        <p class="user-name font-bold">{{ userName() }}</p>
+                        <p class="user-role text-xs text-gray-400">Administrador</p>
+                    </div>
+                    <div class="user-avatar">
+                        <i class="pi pi-user"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="layout-content">
+            <router-outlet />
+        </div>
+    </main>
+</div>
+
+<p-toast />
+<p-confirmDialog />

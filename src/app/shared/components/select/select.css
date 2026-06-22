@@ -1,0 +1,104 @@
+::ng-deep .p-select {
+    width: 100%;
+    background: white !important;
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+::ng-deep .p-select-label {
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    outline: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+::ng-deep .p-select .p-inputtext {
+    padding: 0.75rem 1rem !important;
+    font-size: 1rem !important;
+    outline: none !important;
+    background: transparent !important;
+    border: none !important;
+}
+
+::ng-deep .p-select:not(.p-disabled):hover {
+    border-color: #d1d5db !important;
+}
+
+::ng-deep .p-select.p-focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+::ng-deep .p-select.p-invalid {
+    border-color: #ef4444 !important;
+}
+
+::ng-deep .p-select.p-invalid.p-focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+::ng-deep .p-select.p-disabled {
+    background-color: #f3f4f6 !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+}
+
+::ng-deep .p-select .p-select-dropdown {
+    border: none !important;
+    background: transparent !important;
+    color: #6b7280 !important;
+    margin-left: 12px !important;
+    margin-right: 1rem !important;
+}
+
+::ng-deep .p-select .p-select-clear-icon {
+    border: none !important;
+    background: transparent !important;
+    color: #6b7280 !important;
+    margin-right: 12px !important;
+}
+
+::ng-deep .p-select-overlay {
+    border: 2px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    background: white !important;
+    margin-top: 4px !important;
+}
+
+::ng-deep .p-select-overlay .p-select-filter-container {
+    padding: 0.5rem !important;
+}
+
+::ng-deep .p-select-overlay .p-select-filter-container .p-icon,
+::ng-deep .p-select-overlay .p-select-filter-container svg,
+::ng-deep .p-select-overlay .p-select-filter-container i {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+}
+
+::ng-deep .p-select-overlay .p-select-filter {
+    padding-right: 1rem !important;
+}
+
+::ng-deep .p-select-option {
+    padding: 0.75rem 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+::ng-deep .p-select-option:hover {
+    background-color: #f3f4f6 !important;
+}
+
+::ng-deep .p-select-option.p-focus {
+    background-color: #e5e7eb !important;
+}
+
+::ng-deep .p-select-option.p-selected {
+    background-color: #3b82f6 !important;
+    color: white !important;
+}

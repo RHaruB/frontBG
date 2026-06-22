@@ -1,0 +1,91 @@
+<div class="table-container">
+    <div class="table-wrapper">
+        <table class="app-table" [class.app-table--striped]="striped" [class.app-table--hoverable]="hoverable">
+            @if (showHeader) {
+            <thead class="app-table__header">
+                <tr>
+                    @for (column of columns; track column.field) {
+                    <th [style.width]="column.width" [class.sortable]="column.sortable" (click)="sort(column)">
+                        <div class="app-table__header-cell">
+                            <span>{{ column.header }}</span>
+                            
+                        </div>
+                    </th>
+                    }
+                </tr>
+            </thead>
+            }
+
+            <tbody class="app-table__body">
+                @if (loading) {
+                <tr>
+                    <td [attr.colspan]="columns.length" class="text-center py-8">
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="spinner"></span>
+                            <span>Cargando...</span>
+                        </div>
+                    </td>
+                </tr>
+                } @else if (data.length === 0) {
+                <tr>
+                    <td [attr.colspan]="columns.length" class="text-center py-8 text-gray-500">
+                        {{ emptyMessage }}
+                    </td>
+                </tr>
+                } @else {
+                @for (row of data; track $index) {
+                <tr (click)="handleRowClick(row)">
+                    @for (column of columns; track column.field) {
+                    <td>
+                        @if (getTemplate(column.field)) {
+                        <ng-container
+                            *ngTemplateOutlet="getTemplate(column.field); context: { row: row, $implicit: row }"></ng-container>
+                        } @else {
+                        {{ getCellValue(row, column.field) }}
+                        }
+                    </td>
+                    }
+                </tr>
+                }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (pagination.totalRecords > 0) {
+    <div class="app-table__footer">
+        <div class="pagination-info">
+            <span>Mostrando {{ startRecord }} a {{ endRecord }} de {{ pagination.totalRecords }} registros</span>
+
+            <div class="page-size-selector">
+                <label for="pageSize">Registros por página:</label>
+                <select id="pageSize" [value]="pagination.pageSize" (change)="onPageSizeChange($event)"
+                    class="page-size-select">
+                    @for (option of pageSizeOptions; track option) {
+                    <option [value]="option">{{ option }}</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="pagination-controls">
+            <app-button icon="angle-double-left" variant="outline" size="small" [disabled]="pagination.page === 1"
+                (onClick)="goToPage(1)" />
+
+            <app-button icon="angle-left" variant="outline" size="small" [disabled]="pagination.page === 1"
+                (onClick)="previousPage()" />
+
+            @for (page of visiblePages; track page) {
+            <app-button [label]="page.toString()" [variant]="page === pagination.page ? 'primary' : 'outline'"
+                size="small" (onClick)="goToPage(page)" />
+            }
+
+            <app-button icon="angle-right" variant="outline" size="small" [disabled]="pagination.page === totalPages"
+                (onClick)="nextPage()" />
+
+            <app-button icon="angle-double-right" variant="outline" size="small"
+                [disabled]="pagination.page === totalPages" (onClick)="goToPage(totalPages)" />
+        </div>
+    </div>
+    }
+</div>

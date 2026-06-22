@@ -1,0 +1,233 @@
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0 1rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  position: relative;
+}
+
+.step-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--border);
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
+}
+
+.step-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: color var(--transition-fast);
+  text-align: center;
+}
+
+.step.active .step-circle {
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  border-color: var(--primary);
+  transform: scale(1.1);
+}
+
+.step.active .step-label {
+  color: var(--primary);
+}
+
+.step.completed .step-circle {
+  background-color: var(--primary);
+  color: var(--surface);
+}
+
+.step-connector {
+  flex: 1;
+  height: 2px;
+  background-color: var(--border);
+  margin: 0 -15px;
+  align-self: flex-start;
+  margin-top: 20px;
+  z-index: 1;
+}
+
+.step-content {
+  animation: fadeIn 0.4s ease;
+}
+
+.step-title {
+  color: var(--secondary);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.picker-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--background);
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.5rem;
+}
+
+.btn-add-payment-group {
+  align-self: flex-end;
+  flex: 0.8;
+  min-width: 120px;
+}
+
+.inline-totals-banner {
+  padding: 1rem;
+  background-color: #F8FAFC;
+  border-radius: var(--border-radius-sm);
+  border: 1px solid var(--border);
+}
+
+.step-actions {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid var(--border);
+  padding-top: 1.25rem;
+}
+
+/* Step 3 Layout */
+.step3-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 1.75rem;
+}
+
+@media (max-width: 992px) {
+  .step3-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.payment-picker-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--background);
+  padding: 1.25rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1.25rem;
+}
+
+.payment-picker-form .form-group {
+  flex: 1;
+  min-width: 150px;
+  margin-bottom: 0;
+}
+
+.billing-summary-panel {
+  background-color: #F8FAFC;
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  align-self: flex-start;
+}
+
+.summary-totals-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.summary-row.total {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--secondary);
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.summary-row.paid {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.summary-row.remaining {
+  color: var(--error);
+  font-weight: 700;
+  background-color: var(--error-soft);
+  padding: 0.5rem;
+  border-radius: var(--border-radius-sm);
+  border: 1px dashed rgba(239, 68, 68, 0.2);
+}
+
+.summary-row.remaining.zero {
+  color: var(--success);
+  background-color: var(--success-soft);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.summary-warning-alert {
+  background-color: var(--warning-soft);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  color: #B45309;
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-success-alert {
+  background-color: var(--success-soft);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: #047857;
+  border-radius: var(--border-radius-sm);
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+}
+
+.summary-warning-alert svg,
+.summary-success-alert svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
+}
+
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1.5rem; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,137 @@
+:host {
+    --color-primary: #00305E;
+    --color-secondary: #008254;
+    --color-primary-hover: #00244a;
+    --color-secondary-hover: #006943;
+}
+
+.app-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 500;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    font-family: inherit;
+    white-space: nowrap;
+}
+
+.app-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.app-button--small {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.app-button--medium {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+}
+
+.app-button--large {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+}
+
+.app-button--primary {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.app-button--primary:hover:not(:disabled) {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 48, 94, 0.2);
+}
+
+.app-button--secondary {
+    background-color: var(--color-secondary);
+    color: white;
+    border-color: var(--color-secondary);
+}
+
+.app-button--secondary:hover:not(:disabled) {
+    background-color: var(--color-secondary-hover);
+    border-color: var(--color-secondary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(0, 130, 84, 0.2);
+}
+
+.app-button--outline {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.app-button--outline:hover:not(:disabled) {
+    background-color: var(--color-primary);
+    color: white;
+    transform: translateY(-1px);
+}
+
+.app-button--text {
+    background-color: transparent;
+    color: var(--color-primary);
+    border-color: transparent;
+}
+
+.app-button--text:hover:not(:disabled) {
+    background-color: rgba(0, 48, 94, 0.1);
+}
+
+.app-button--disabled,
+.app-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.app-button--loading {
+    cursor: wait;
+    position: relative;
+}
+
+.app-button--full-width {
+    width: 100%;
+}
+
+.app-button__spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.app-button__icon {
+    font-size: 1em;
+}
+
+.app-button__icon--left {
+    margin-right: -0.25rem;
+}
+
+.app-button__icon--right {
+    margin-left: -0.25rem;
+}
+
+.app-button__label {
+    line-height: 1;
+}
